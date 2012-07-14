@@ -1,3 +1,5 @@
 *~
 *.swp
 *#*#
+lib/*
+.lein-deps-sum
