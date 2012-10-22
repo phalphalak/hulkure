@@ -8,7 +8,7 @@
    :figures [],
    :round 0,
    :current-player 0,
-   :figure-templates []})
+   :figure-templates {}})
 
 (defn load [path]
   (json/read-str (slurp path) :key-fn keyword))
@@ -17,29 +17,47 @@
   {:pre [(<= 0 x) (< x (board :width)) (<= 0 y) (< y (board :height))]}
   (+ (* y (board :width)) x))
 
-(defn field [board x y]
+(defn get-field [board x y]
   ((board :fields) (coordinates-to-index board x y)))
 
 (defn- set-field [board x y value]
   (assoc-in board [:fields (coordinates-to-index board x y)] value))
 
-(defn add-figure-template [board template]
-  (assoc-in board [:figure-templates (count (board :figure-templates))] template))
+(defn- get-indexed-figure [board id]
+  (filter (fn[index figure] (= (figure :id) id)
+            (map-indexed vector (board :figures)))))
+
+(defn get-figure-by-id [board id]
+  (second (get-indexed-figure board id)))
+
+(defn get-figure-index [board id]
+  (first (get-indexed-figure board id)))
+
+(defn get-figures-at [board x y]
+  (filterv (fn [figure] (= [x y]
+                           (mapv figure [:x :y])))
+           (board :figures)))
+
+(defn set-figure [board id new-figure]
+  (assoc-in board [:figures (get-figure-index board id)] new-figure))
+
+(defn update-figure [board id attributes]
+  (set-figure board id (merge (get-figure-by-id id) attributes)))
 
 (defn place-figure [board id x y]
-  {:pre [(not (nil? (field board x y)))]}
-  ()
-  (set-field board x y (if (nil? id)
-                         (dissoc (field board x y) :figure)
-                         (assoc (field board x y) :figure id))))
+  {:pre [(not (nil? (get-field board x y)))]}
+  (update-figure board id {:x x :y y}))
+
+(defn next-available-figure-id [board]
+  (if (empty? (board :figures))
+    0
+    (inc (apply max (map :id (board :figures))))))
 
 (defn add-figure [board figure]
-  (let [id (count (board :figures))]
-       (let [new-board (assoc-in board [:figures id] (assoc figure :id id))
-             [x y] [(figure :x) (figure :y)]]
-         (if (and x y)
-           (place-figure new-board id x y)
-           new-board))))
+  (let [id (next-available-figure-id board)]
+    (assoc-in board
+              [:figures (count (board :figures))]
+              (assoc figure :id id))))
 
 ;; movement related
 (def movement-offset
@@ -71,7 +89,7 @@
   ((board :figures) id))
 
 (defmethod figure :by-coordinates [board x y]
-  (let [id (field x y)] (figure id)))
+  (let [id (get-field x y)] (figure id)))
 
 (defn template [board name]) ;; multi name or figure
 

@@ -43,10 +43,20 @@
       (testing "figures with coordinates"
         (let [figure-1 {:x 3, :y 1}
               figure-2 {:x 7, :y 2}
-              board (add-figure (add-figure board figure-1) figure-2)]
-          (is (= (board :figures) [{:x 3, :y 1, :id 0}, {:x 7, :y 2, :id 1}]))
-          (is (= (field board 3 1) {:figure 0}))
-          (is (= (field board 7 2) {:figure 1}))))
+              figure-3 {:x 7, :y 2}
+              board (add-figure (add-figure (add-figure board
+                                                        figure-1)
+                                            figure-2)
+                                figure-3)]
+          (is (= (board :figures)
+                 [{:x 3, :y 1, :id 0},
+                  {:x 7, :y 2, :id 1},
+                  {:x 7, :y 2, :id 2}]))
+          (is (= (get-figures-at board 3 1)
+                 [{:x 3, :y 1, :id 0}]))
+          (is (= (get-figures-at board 7 2)
+                 [{:x 7, :y 2, :id 1},
+                  {:x 7, :y 2, :id 2}]))))
       (testing "figures without coordinates"
         (let [figure-1 {}
               figure-2 {}
