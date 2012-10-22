@@ -1,0 +1,23 @@
+{
+  "width" : 14,
+  "height" : 13,
+  "figures" : [],
+  "round" : 0,
+  "current-player" : 0,
+  "figure-templates" : [],
+  "fields" : [
+    null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+    null, {},   {},   {},   {},   {},   {},   {},   null, null, null, null, null, null,
+    null, {},   null, null, {},   null, null, {},   {},   {},   {},   {},   {},   null,
+    null, {},   null, null, {},   null, null, {},   null, null, null, null, null, null,
+    null, {},   {},   {},   {},   {},   {},   {},   null, {},   {},   {},   {},   null,
+    null, {},   null, null, {},   null, null, {},   {},   {},   {},   {},   {},   null,
+    null, {},   null, null, {},   null, null, {},   null, {},   {},   {},   {},   null,
+    null, {},   {},   {},   {},   {},   {},   {},   null, null, {},   null, null, null,
+    null, null, null, null, {},   null, null, null, null, null, {},   null, null, null,
+    null, null, null, {},   {},   {},   null, null, null, {},   {},   {},   null, null,
+    null, null, null, {},   {},   {},   {},   {},   {},   {},   {},   {},   null, null,
+    null, null, null, {},   {},   {},   null, null, null, {},   {},   {},   null, null,
+    null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+  ]
+}
