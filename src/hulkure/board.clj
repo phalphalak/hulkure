@@ -1,6 +1,7 @@
 (ns hulkure.board
   (:require [clojure.data.json :as json])
-  (:use [hulkure.utils :only [filter-first]]))
+  (:use [hulkure.utils :only [filter-first
+                              removev]]))
 
 (defn make-board []
   {:fields [], ; contains fields. The keys :x and :y are handled like unique keys
@@ -15,16 +16,30 @@
 
 (defn- get-field-with-index [board x y]
   "returns [index field]"
-  (or (filter-first #(and (= x (% :x))
-                          (= y (% :y)))
+  (or (filter-first #(and (= x ((second %) :x))
+                          (= y ((second %) :y)))
                     (map-indexed vector (board :fields)))
       [nil nil]))
 
 (defn- get-field-index [board x y]
   (first (get-field-with-index board x y)))
 
-(defn get-field [board x y]
-  (last (get-field-with-index board x y)))
+(defn get-field
+  ([board xy]
+     (get-field board (xy :x) (xy :y)))
+  ([board x y]
+     (last (get-field-with-index board x y))))
+
+(defn remove-field
+  "remove field at coordinates x and y. Warning: does not handle figures at specified coordinates."
+  ([board xy]
+     (remove-field board (xy :x) (xy :y)))
+  ([board x y]
+     (let [[index field] (get-field-with-index board x y)]
+       (if index
+         (assoc board :fields (removev (board :fields)
+                                       index))
+         board))))
 
 (defn set-field [board field]
   "Update or add field if it does not exist"
