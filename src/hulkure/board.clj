@@ -6,11 +6,23 @@
 (defn make-board []
   {:fields [], ; contains fields. The keys :x and :y are handled like unique keys
    :figures [],
+   :tiles {}, ; contains mapping of tile id to tile-info hash
    :round 0,
    :current-player 0})
 
-(defn load [path]
+(defn load-board [path]
   (json/read-str (slurp path) :key-fn keyword))
+
+;; tiles
+
+(defn set-tile [board id tile-info]
+  (assoc-in board [:tiles id] tile-info))
+
+(defn get-tile [board id]
+  (get-in board [:tiles id]))
+
+(defn get-tile-ids [board]
+  (keys (board :tiles)))
 
 ;; fields
 
@@ -46,6 +58,9 @@
   (let [index (or (get-field-index board (field :x) (field :y))
                   (count (board :fields)))]
     (assoc-in board [:fields index] field)))
+
+(defn get-tile-fields [board tile-id]
+  (filterv #(= tile-id (% :tile-id)) (board :fields)))
 
 ;; figures
 
